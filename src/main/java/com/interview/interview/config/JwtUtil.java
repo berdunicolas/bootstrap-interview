@@ -2,6 +2,7 @@ package com.interview.interview.config;
 
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -11,20 +12,25 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtil {
-    private final String SECRET_KEY = "LXN0BmcnOujarNMt8kI22oOfE9U1ng9YFbIKCgjg1f962e8e"; //Esto debe ser por medio de variables de entorno del sistema
+
+    private final String secretKey;
+
+    public JwtUtil(@Value("${jwt.secret}") String secretKey) {
+        this.secretKey = secretKey;
+    }
 
     public String generateToken(String username) {
         return Jwts.builder()
             .setSubject(username)
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
-            .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
+            .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), SignatureAlgorithm.HS256)
             .compact();
     }
 
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
-            .setSigningKey(SECRET_KEY.getBytes())
+            .setSigningKey(secretKey.getBytes())
             .build()
             .parseClaimsJws(token)
             .getBody()

@@ -1,0 +1,9 @@
+spring.application.name=interview
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/springboot_interview
+spring.datasource.username=
+spring.datasource.password=
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+jwt.secret="${JWT_SECRET}"
